@@ -8,3 +8,4 @@ Arduino Mega
     └── L298N #3 ── Motor 5
              │
           12V SMPS
+          
