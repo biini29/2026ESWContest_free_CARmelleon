@@ -48,7 +48,7 @@
 
 - **설계 의도:** 센서를 상단에 안정적으로 지지하고 탑승자 머리 상단과의 거리를 수직 방향으로 정밀 측정하기 위한 ㄱ자 형상 브라켓 (`ultrasonic_sensor_bracket`) 활용
 - **정확한 치수 연산:**
-  - 센서 설치 높이: 바닥면 기준 585mm + 브라켓 오프셋 60mm = **645mm**
+  - 센서 설치 높이: 바닥면 기준 프레임 높이 585mm + 브라켓 홀더 높이 80mm - 브라켓 오프셋 20mm= 645mm
   - 방석 기준 오차 보정 높이: **방석 면 기준 570mm** 고정 (상세 내용은 [`Seat_Control_Algorithm.md`](../../04_Software/Seat_Control_Algorithm.md) 4절 참고)
 - **부품 위치:**
   - 센서 고정 프레임: [`ultrasonic_sensor_holder_frame.step`](3D_model/partial_component/custom/custom_stp/ultrasonic_sensor_holder_frame.step)
