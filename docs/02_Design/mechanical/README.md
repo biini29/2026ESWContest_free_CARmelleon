@@ -71,4 +71,4 @@
 - **전시 부스 규격 (2m × 2m):**
   - 2:1 축소 설계를 통해 제어 박스(`control_box`) 포함 전체 모형이 소형화되어 2m × 2m 전시 공간 내에 여유 있게 배치 가능.
 - **운반 및 조립 편의성:**
-  - 시트 하단(`seat_bottom`), 백레스트 외각 프레임(`backrest_outer_frame`), 제어 박스(`control_box`)가 모듈화되어 있어 분해 및 이동/재조립이 용이함.
+  - 시트 하단(`seat_bottom`), 백레스트 외각 프레임(`backrest_outer_frame`), 안전벨트 외각 프레임(`seatbelt_outer_frame`), 제어 박스(`control_box`)가 각 모듈별로 독립 분리 가능하도록 설계되어 있어 운반 및 현장 재조립이 용이함.
