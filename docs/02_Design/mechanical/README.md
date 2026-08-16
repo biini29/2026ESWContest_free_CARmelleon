@@ -5,7 +5,7 @@
 
 이 축소 모형을 통해 5개의 리니어 액추에이터를 활용한 등받이 요추(Lumber) 제어 및 다이나믹셀 기반의 능동형 안전벨트 장력 조절 메커니즘을 소형 공간 내에서 직관적으로 검증할 수 있습니다.
 
-![전체 조립도](./3D_model/screenshot/render_image.png)
+![전체 조립도](3D_model/screenshot/render%20image.png)
 
 ---
 
@@ -15,7 +15,7 @@
 
 - **액추에이터 결합 방식:** `linear_motor_mount_plate` 부품에 가공된 홀을 통해 리니어 액추에이터를 나사 체결로 직접 고정
 - **액추에이터 간격 구현:** 방석 면 기준 하단부터 150mm, 320mm, 490mm, 660mm, 830mm 위치에 각각 고정되어 구동부 쉘(`backrest_shell`)을 밀어내는 방식으로 요추 지지 곡면 형성
-- **연결 폴더:** [`Linear_Moter_Lumber_Structure/`](./Linear_Moter_Lumber_Structure/) 내부 자료 참고
+- **연결 폴더:** [`Linear Moter Lumber Structure/`](./Linear%20Moter%20Lumber%20Structure/) 내부 자료 참고
 
 | 항목 | 값 |
 |---|---|
@@ -45,10 +45,10 @@
 - **설계 의도:** 센서를 상단에 안정적으로 지지하고 탑승자 머리 상단과의 거리를 수직 방향으로 정밀 측정하기 위한 ㄱ자 형상 브라켓 (`ultrasonic_sensor_bracket`) 활용
 - **정확한 치수 연산:**
   - 센서 설치 높이: 바닥면 기준 585mm + 브라켓 오프셋 60mm = **645mm**
-  - 방석 기준 오차 보정 높이: **방석 면 기준 570mm** 고정 (상세 내용은 [`Seat_Control_Algorithm.md`](../04_Software/Seat_Control_Algorithm.md) 4절 참고)
+  - 방석 기준 오차 보정 높이: **방석 면 기준 570mm** 고정 (상세 내용은 [`Seat_Control_Algorithm.md`](../../04_Software/Seat_Control_Algorithm.md) 4절 참고)
 - **부품 위치:**
-  - 센서 고정 프레임: [`ultrasonic_sensor_holder_frame.step`](./3D_model/partial_component/custom/custom_stp/ultrasonic_sensor_holder_frame.step)
-  - 센서 브라켓: [`ultrasonic_sensor_bracket.step`](./3D_model/partial_component/third_party/third_party_stp/ultrasonic_sensor_bracket.step)
+  - 센서 고정 프레임: [`ultrasonic_sensor_holder_frame.step`](3D_model/partial_component/custom/custom_stp/ultrasonic_sensor_holder_frame.step)
+  - 센서 브라켓: [`ultrasonic_sensor_bracket.step`](3D_model/partial_component/third_party/third_party_stp/ultrasonic_sensor_bracket.step)
 
 ---
 
@@ -56,11 +56,11 @@
 
 | 파일/폴더 경로 | 설명 | 주요 포함 파일 형식 |
 |---|---|---|
-| [`3D_model/assemble/`](./3D_model/assemble/) | 전체 조립 3D 모델 파일 | `.step`, `.stl` |
-| [`3D_model/partial_component/custom/`](./3D_model/partial_component/custom/) | 자체 설계 커스텀 파트 모음 | `custom_stp/` (`.step`), `custom_stl/` (`.stl`) |
-| [`3D_model/partial_component/third_party/`](./3D_model/partial_component/third_party/) | 외부 제조사 및 오픈소스 CAD 데이터 | `third_party_stp/` (`.step`), `third_party_stl/` (`.stl`) |
-| [`3D_model/screenshot/`](./3D_model/screenshot/) | 모델링 설계 및 렌더링 이미지 | `.png` |
-| [`Linear_Moter_Lumber_Structure/`](./Linear_Moter_Lumber_Structure/) | 등받이 액추에이터 배치 상세 구조 | - |
+| [`3D_model/assemble/`](3D_model/assemble/) | 전체 조립 3D 모델 파일 | `.step`, `.stl` |
+| [`3D_model/partial_component/custom/`](3D_model/partial_component/custom/) | 자체 설계 커스텀 파트 모음 | `custom_stp/` (`.step`), `custom_stl/` (`.stl`) |
+| [`3D_model/partial_component/third_party/`](3D_model/partial_component/third_party/) | 외부 제조사 및 오픈소스 CAD 데이터 | `third_party_stp/` (`.step`), `third_party_stl/` (`.stl`) |
+| [`3D_model/screenshot/`](3D_model/screenshot/) | 모델링 설계 및 렌더링 이미지 | `.png` |
+| [`Linear Moter Lumber Structure/`](Linear%20Moter%20Lumber%20Structure/) | 등받이 액추에이터 배치 상세 구조 | - |
 
 ---
 
