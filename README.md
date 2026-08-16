@@ -143,6 +143,4 @@ Symptom: pressing the same profile button (e.g., B) repeatedly sent the belt to 
 
 ---
 
-## 📄 License
 
-<!-- TODO: 라이선스 결정 (MIT 추천) -->
