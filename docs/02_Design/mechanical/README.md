@@ -29,13 +29,12 @@
 
 탑승자의 체형 및 시트 상태 변형에 반응하여 벨트 장력을 능동적으로 제어하기 위해 2개의 ROBOTIS DYNAMIXEL XL430 모터가 적용되었습니다.
 
-- **릴 메커니즘:** 다이나믹셀 모터 축과 연결 커넥터(`motor-shaft connecter`)로 연결된 릴(`belt_drive_reel`)이 회전하며 벨트(`belt`)를 감거나 풀어 장력을 조절합니다.
+- **릴 메커니즘:** 다이나믹셀 모터의 출력 토크가 직접 설계한 커플링 부품인 **모터-샤프트 커넥터(`motor-shaft connecter`)** 및 **구동 샤프트(`belt_drive_shaft`)**를 거쳐 벨트 릴(`belt_drive_reel`)로 전달되어 회전하며 벨트(`belt`)를 정밀하게 권취/인출합니다.
 - **주요 부품 구성:**
   - 모터 고정: `belt_motor_bracket`
-  - 동력 전달: `belt_drive_shaft`, `motor-shaft connecter`
+  - 동력 전달 커스텀 설계: `belt_drive_shaft`, `motor-shaft connecter`
   - 벨트 가이드: `belt_guide` (벨트의 꼬임 방지 및 이송 경로 유지)
   - 외각 프레임: `seatbelt_outer_frame`
-
 ---
 
 ## 4. 헤드레스트 자리 — 초음파센서 ㄱ자 브라켓
