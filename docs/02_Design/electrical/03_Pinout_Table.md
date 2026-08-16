@@ -374,3 +374,5 @@ L298N #3 GND ────┘
 * 초음파 센서
 * DYNAMIXEL / U2D2
 * 기타 Arduino 주변장치
+
+> 키패드/LCD/초음파/DYNAMIXEL 핀맵은 `electrical/README.md`에 정리되어 있습니다.
