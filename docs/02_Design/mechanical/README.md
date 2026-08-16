@@ -1,11 +1,11 @@
 
 ## 1. 전체 구조 개요
 
-본 프로젝트는 실제 차량용 컴포트 시트 메커니즘을 검증하기 위해 제작된 2:1 축소 스케일 프로토타입입니다. 실물 시트의 기하학적 형상과 기계적 동작 원리를 유지하면서, 부스 전시 규격 제약과 3D 프린터 출력 가능 범위를 고려하여 외형 및 동작 스트로크 비율을 50% 축소 적용하였습니다.
+본 프로젝트는 실제 차량용 컴포트 시트 메커니즘을 검증하기 위해 제작된 **2:1 축소 스케일 프로토타입**입니다. 실물 시트의 기하학적 형상과 기계적 동작 원리를 유지하면서, 부스 전시 규격 제약과 3D 프린터 출력 가능 범위를 고려하여 외형 및 동작 스트로크 비율을 50% 축소 적용하였습니다.
 
 이 축소 모형을 통해 5개의 리니어 액추에이터를 활용한 등받이 요추(Lumber) 제어 및 다이나믹셀 기반의 능동형 안전벨트 장력 조절 메커니즘을 소형 공간 내에서 직관적으로 검증할 수 있습니다.
 
-![전체 조립도](./3D_model/screenshot/render%20image.png)
+![전체 조립도](./3D_model/screenshot/render_image.png)
 
 ---
 
@@ -15,7 +15,7 @@
 
 - **액추에이터 결합 방식:** `linear_motor_mount_plate` 부품에 가공된 홀을 통해 리니어 액추에이터를 나사 체결로 직접 고정
 - **액추에이터 간격 구현:** 방석 면 기준 하단부터 150mm, 320mm, 490mm, 660mm, 830mm 위치에 각각 고정되어 구동부 쉘(`backrest_shell`)을 밀어내는 방식으로 요추 지지 곡면 형성
-- **연결 폴더:** [`Linear Moter Lumber Structure/`](./Linear%20Moter%20Lumber%20Structure/) 내부 자료 참고
+- **연결 폴더:** [`Linear_Moter_Lumber_Structure/`](./Linear_Moter_Lumber_Structure/) 내부 자료 참고
 
 | 항목 | 값 |
 |---|---|
@@ -58,9 +58,9 @@
 |---|---|---|
 | [`3D_model/assemble/`](./3D_model/assemble/) | 전체 조립 3D 모델 파일 | `.step`, `.stl` |
 | [`3D_model/partial_component/custom/`](./3D_model/partial_component/custom/) | 자체 설계 커스텀 파트 모음 | `custom_stp/` (`.step`), `custom_stl/` (`.stl`) |
-| [`3D_model/partial_component/third_party/`](./3D_model/partial_component/third_party/) | 외부 제조사 및 오프소스 CAD 데이터 | `third_party_stp/` (`.step`), `third_party_stl/` (`.stl`) |
+| [`3D_model/partial_component/third_party/`](./3D_model/partial_component/third_party/) | 외부 제조사 및 오픈소스 CAD 데이터 | `third_party_stp/` (`.step`), `third_party_stl/` (`.stl`) |
 | [`3D_model/screenshot/`](./3D_model/screenshot/) | 모델링 설계 및 렌더링 이미지 | `.png` |
-| [`Linear Moter Lumber Structure/`](./Linear%20Moter%20Lumber%20Structure/) | 등받이 액추에이터 배치 상세 구조 | - |
+| [`Linear_Moter_Lumber_Structure/`](./Linear_Moter_Lumber_Structure/) | 등받이 액추에이터 배치 상세 구조 | - |
 
 ---
 
