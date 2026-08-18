@@ -1,4 +1,3 @@
-
 # Smart Seat (Family Care) 🚗💺
 
 > A ROS 2-based adaptive car seat system that automatically reshapes the backrest curve and adjusts seatbelt height to fit each occupant — from pregnant passengers to children old enough to have outgrown a car seat, to guests — sharing a single family vehicle.
@@ -8,9 +7,11 @@
 **Team**
 | Name | Role |
 |---|---|
-| **Sulbeen Min** (민설빈, Team Leader) | ROS 2 system integration, control logic, hardware bridge, calibration |
-| **Jaekyung Kim** (김재경) | *(add role)* |
-| **Bogyeom Cha** (차보겸) | *(add role)* |
+| **Sulbeen Min** (민설빈, Team Leader) | ROS 2 system integration, control logic, hardware bridge, calibration, Size Korea regression analysis |
+| **Jaekyung Kim** (김재경) | Overall design & pin wiring, integrating existing nodes into the launch file, GitHub repository organization |
+| **Bogyeom Cha** (차보겸) | Overall design (lead) & hardware wiring, assembly integration, GitHub repository organization |
+
+> Full background, goals, usage scenarios, team role breakdown, and the complete development schedule are in [`docs/01_Project_Overview/`](./docs/01_Project_Overview/).
 
 ---
 
@@ -22,6 +23,8 @@ Smart Seat infers a rider's body profile — from height, weight, and pregnancy 
 - **2 Dynamixel servo motors** to raise or lower the seatbelt anchor to shoulder height (or pelvic height in pregnant mode).
 
 Riders select a saved family profile (A/B/C) or enter a custom height as a guest, via a 4×4 keypad + I2C LCD — or simply sit still for 3 seconds (long-press the guest key) and let an ultrasonic sensor estimate their height automatically. The whole pipeline — input → body model → actuator targets → motor motion — runs as a set of ROS 2 nodes on a Raspberry Pi, bridging to an Arduino Mega (linear actuators) and a U2D2 Power Hub Board (Dynamixel belt motors).
+
+> 📖 더 자세한 문서는 [`docs/`](./docs/) 폴더를 참고하세요 — [프로젝트 개요](./docs/01_Project_Overview/), [설계](./docs/02_Design/), [하드웨어 부품 목록](./docs/03_Hardware/), [소프트웨어 아키텍처](./docs/04_Software/), [테스트 로그](./docs/05_Test/), [데모 자료](./docs/06_Demo/).
 
 <!-- IMAGE: hero shot — 완성된 시트 전체 모습 (또는 작동 GIF), 파일명 예: docs/img/hero.jpg -->
 <!-- ![Smart Seat](docs/img/hero.jpg) -->
@@ -173,4 +176,6 @@ Symptom: right after startup, the 'D' key would register as pressed with no one 
 
 ## 📄 License
 
-<!-- TODO: 라이선스 결정 (MIT 추천) -->
+This project is licensed under the [MIT License](./LICENSE).
+
+Third-party CAD assets (Dynamixel, linear actuator, HC-SR04 vendor/community models) used under their respective licenses — see [`docs/02_Design/mechanical/3D_model/partial_component/third_party/README.md`](./docs/02_Design/mechanical/3D_model/partial_component/third_party/README.md) for full attribution.
