@@ -50,6 +50,6 @@ Arduino에는 리니어 액추에이터 전용 스케치가 항상 올라가 있
 ## 4. 관련 문서
 
 - [`03_Pinout_Table.md`](./03_Pinout_Table.md) — Arduino/L298N 상세 핀맵
-- [`전원계통도_및_전체_결선도.png`](./전원계통도_및_전체_결선도.png) — 통합 회로도
-- [`Arduino_Ros_Protocol.md`](../../04_Software/Arduino_Ros_Protocol.md) — 시리얼 프로토콜 명세
-- [`하드웨어_사용_부품_목록표.md`](../../03_Hardware/하드웨어_사용_부품_목록표.md) — 부품 목록(BOM)
+- [`전원계통도_및_전체_결선도_통합.md`](./전원계통도_및_전체_결선도_통합.md) — 통합 회로도
+- [`03_Arduino_Ros_Protocol.md`](../../04_Software/03_Arduino_Ros_Protocol.md) — 시리얼 프로토콜 명세
+- [`01_하드웨어_사용_부품_목록표.md`](../../03_Hardware/01_하드웨어_사용_부품_목록표.md) — 부품 목록(BOM)
