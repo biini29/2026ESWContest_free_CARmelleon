@@ -87,7 +87,7 @@ Raspberry Pi 3
 ROW_PINS = [5, 6, 13, 19]      # BCM
 COL_PINS = [26, 12, 16, 20]    # BCM
 ```text
-Raspberry Pi 4          I2C LCD
+Raspberry Pi 3          I2C LCD
 ────────────────────────────────
 Pin 2  (5V)      ─────► VCC
 Pin 6  (GND)     ─────► GND
@@ -149,11 +149,11 @@ C4 ───────────────────► GPIO 20
 ## 3. Raspberry Pi ↔ Arduino Mega 통신
 # 4. Raspberry Pi 3 ↔ Arduino Mega 2560
 
-Raspberry Pi 4와 Arduino Mega 2560은 USB Serial 통신으로 연결한다.
-Raspberry Pi 4와 Arduino Mega 2560은 USB로 연결합니다.
+Raspberry Pi 3와 Arduino Mega 2560은 USB Serial 통신으로 연결한다.
+Raspberry Pi 3와 Arduino Mega 2560은 USB로 연결합니다.
 
 ```text
-Raspberry Pi 4
+Raspberry Pi 3
       │
       │ USB Serial
       │ USB
@@ -346,19 +346,19 @@ L298N #3의 B채널(ENB, IN3, IN4)은 사용하지 않습니다.
                  등받이
                    │
                    │
-              M5 830 mm
+              M5 500 mm
                    │
                    │
-              M4 660 mm
+              M4 415 mm
                    │
                    │
-              M3 490 mm
+              M3 330 mm
                    │
                    │
-              M2 320 mm
+              M2 245 mm
                    │
                    │
-              M1 150 mm
+              M1 160 mm
                    │
                    ▼
 ```
@@ -368,10 +368,10 @@ L298N #3의 B채널(ENB, IN3, IN4)은 사용하지 않습니다.
 ---
 
 ## 7. 12V 전원 연결
-# 10. Raspberry Pi 4 ↔ U2D2
+# 10. Raspberry Pi 3 ↔ U2D2
 
 12V 전원공급장치의 출력은 L298N 3개에 병렬로 연결한다.
-Raspberry Pi 4와 U2D2는 USB로 연결합니다.
+Raspberry Pi 3와 U2D2는 USB로 연결합니다.
 
 ```text
 12V Power Supply (+)
@@ -538,7 +538,7 @@ Raspberry Pi 3
 
 | 장치 | 공급 전원 |
 |---|---:|
-| Raspberry Pi 4 | 5V |
+| Raspberry Pi 3 | 5V |
 
 ---
 
