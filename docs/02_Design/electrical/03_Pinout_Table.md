@@ -16,7 +16,7 @@
 
 ---
 
-## 2. Raspberry Pi 4 핀맵
+## 2. Raspberry Pi 3 핀맵
 ## 1. 전체 시스템 구성
 
 ### 2-1. I2C LCD
