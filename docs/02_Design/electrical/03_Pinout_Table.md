@@ -117,6 +117,7 @@ Arduino Mega 2560
 | 연결                    | 방식  | 기능           |
 | --------------------- | --- | ------------ |
 | Raspberry Pi 3 → U2D2 | USB | DYNAMIXEL 통신 |
+
 Raspberry Pi 3
       │
       │ USB
