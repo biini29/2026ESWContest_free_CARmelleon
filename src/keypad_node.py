@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
@@ -21,9 +22,9 @@ class SmartSeatController(Node):
         self.profiles = self.load_profiles()
 
         try:
-            self.lcd = CharLCD('PCF8574', 0x27, cols=16, rows=2)
+            self.lcd = CharLCD('PCF8574', 0x27, cols=16, rows=2, auto_linebreaks=False)
             self.lcd.clear()
-            self.lcd.write_string("Family Seat Sys\nReady...")
+            self.lcd.write_string("Family Seat\nReady...")
             self.get_logger().info('LCD Initialized Successfully (0x27)')
         except Exception as e:
             self.get_logger().error(f'LCD Init Failed: {e}')
@@ -36,10 +37,10 @@ class SmartSeatController(Node):
         self.ROW_PINS = [5, 6, 13, 19]
         self.COL_PINS = [26, 12, 16, 20]
         self.KEY_MAP = [
-            ['1', '2', '3', 'A'],
-            ['4', '5', '6', 'B'],
-            ['7', '8', '9', 'C'],
-            ['.', '0', 'E', 'D']
+            ['C', '.', '7', '3'],
+            ['D', 'E', '8', '4'],
+            ['B', '0', '6', '2'],
+            ['A', '9', '5', '1'],
         ]
         for pin in self.ROW_PINS:
             GPIO.setup(pin, GPIO.OUT)
@@ -68,7 +69,7 @@ class SmartSeatController(Node):
         # 키패드 디바운스 / 유령신호 방지
         self._debounce_candidate = None
         self._debounce_count = 0
-        self.DEBOUNCE_THRESHOLD = 4
+        self.DEBOUNCE_THRESHOLD = 2
 
         # 부팅 워밍업 (전원 노이즈로 인한 유령 D 입력 방지)
         self.BOOT_WARMUP_SEC = 1.5
@@ -124,7 +125,7 @@ class SmartSeatController(Node):
             return
         key = self._debounce_candidate
 
-        if not self.guest_mode_active:
+        if True:  # D 롱프레스/짧은클릭은 게스트모드 여부와 무관하게 항상 동작
             if key == 'D':
                 if self.last_key != 'D':
                     self.d_press_time = time.time()
@@ -135,8 +136,14 @@ class SmartSeatController(Node):
                     self.get_logger().info('D 3초 이상 입력 → 초음파 자동 측정 시작')
                     self.measure_height_ultrasonic()
                 self.last_key = key
+                self.d_last_seen_time = time.time()
                 return
             elif self.last_key == 'D' and key != 'D':
+                if self.d_press_time is not None and (time.time() - getattr(self, 'd_last_seen_time', 0)) < 0.3:
+                    if not self.d_long_fired and (time.time() - self.d_press_time) >= self.LONGPRESS_SEC:
+                        self.d_long_fired = True
+                        self.measure_height_ultrasonic()
+                    return
                 if not self.d_long_fired:
                     self.process_key('D')
                 self.d_press_time = None
@@ -178,7 +185,7 @@ class SmartSeatController(Node):
                             time.sleep(4.0)
                             self.guest_mode_active = False
                             self.input_buffer = ""
-                            self.update_lcd("Family Seat Sys", "Ready...")
+                            self.update_lcd("Family Seat", "Ready...")
                         else:
                             self.get_logger().warn(f"Invalid range: {input_height}")
                             self.update_lcd("Error: Bad Range", "Limit: 130 - 185")
@@ -193,7 +200,7 @@ class SmartSeatController(Node):
             elif key == 'D':
                 self.guest_mode_active = False
                 self.input_buffer = ""
-                self.update_lcd("Family Seat Sys", "Ready...")
+                self.update_lcd("Family Seat", "Ready...")
             elif key in self.profiles:
                 # 게스트 모드 중 프로필 키가 눌리면 노이즈로 잘못 진입한 것으로 판단하여 자동 복구
                 self.get_logger().warn('게스트 모드 중 프로필 키 감지 -> 게스트 모드 취소 후 적용')
@@ -222,6 +229,8 @@ class SmartSeatController(Node):
                     self.update_lcd("Guest Mode", f"Enter H: {self.input_buffer}")
 
     def measure_height_ultrasonic(self):
+        self.guest_mode_active = False
+        self.input_buffer = ""
         self.update_lcd("Measuring...", "Please sit")
         time.sleep(1.0)
 
@@ -254,7 +263,7 @@ class SmartSeatController(Node):
             time.sleep(2.5)
             self.guest_mode_active = False
             self.input_buffer = ""
-            self.update_lcd("Family Seat Sys", "Ready...")
+            self.update_lcd("Family Seat", "Ready...")
         else:
             self.update_lcd("Applicable Range", "130 ~ 185 cm")
             time.sleep(2.5)
@@ -288,11 +297,13 @@ class SmartSeatController(Node):
         if self.lcd:
             try:
                 self.lcd.clear()
-                time.sleep(0.01)
+                time.sleep(0.02)
                 self.lcd.cursor_pos = (0, 0)
                 self.lcd.write_string(f"{line1[:16]:<16}")
+                time.sleep(0.02)
                 self.lcd.cursor_pos = (1, 0)
                 self.lcd.write_string(f"{line2[:16]:<16}")
+                time.sleep(0.02)
             except Exception as e:
                 self.get_logger().error(f"LCD Error: {e}")
 
