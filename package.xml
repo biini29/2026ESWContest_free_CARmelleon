@@ -3,19 +3,26 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>smart_seat</name>
-  <version>0.1.0</version>
-  <description>가변형 스마트시트 (Family Care) - 생애주기 맞춤형 자동 체형 조절 시트</description>
-  <maintainer email="TODO@example.com">CAR멜레온</maintainer>
+  <version>1.0.0</version>
+  <description>Family Care Smart Seat - 생애주기 맞춤형 자동 체형 조절 시트</description>
+  <maintainer email="sulbeen@todo.todo">sulbeen</maintainer>
   <license>MIT</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
+  <!-- 커스텀 메시지 생성을 위한 도구 -->
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
 
-  <depend>rclpy</depend>
+  <!-- 우리가 쓰는 메시지 패키지들 -->
   <depend>geometry_msgs</depend>
   <depend>std_msgs</depend>
 
-  <build_depend>rosidl_default_generators</build_depend>
+  <!-- 파이썬 노드 실행용 -->
+  <depend>rclpy</depend>
+
+  <!-- 메시지 실행 시점 의존성 -->
   <exec_depend>rosidl_default_runtime</exec_depend>
+
+  <!-- 이 패키지가 메시지를 제공하는 패키지임을 선언 -->
   <member_of_group>rosidl_interface_packages</member_of_group>
 
   <test_depend>ament_lint_auto</test_depend>
