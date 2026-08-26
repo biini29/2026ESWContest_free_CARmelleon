@@ -36,7 +36,6 @@ class SeatControllerNode(Node):
         threading.Thread(target=self.move_all, args=(targets,)).start()
     def reset_all(self):
         # 현재 위치 기준 필요 시간 계산 (제일 오래 걸리는 모터 + 여유 3초)
-        import datetime
         max_time = 0.0
         for idx in range(NUM_MOTORS_CTRL):
             motor_num = MOTOR_MAP[idx]
