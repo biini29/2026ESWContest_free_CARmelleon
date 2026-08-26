@@ -17,6 +17,8 @@ Smart Seat (Family Care)의 ROS 2 노드 구성, 토픽 흐름, 메시지 정의
 | `belt_controller_node` | `belt_controller_node.py` | 다이나믹셀 2개 포지션 제어 |
 | `arduino_bridge_node` | `arduino_bridge_node.py` | ROS 2 ↔ 아두이노 시리얼 브릿지 |
 
+> **참고**: `sensor_bridge_node.py`는 압력센서(FSR) 등 실시간 피드백 확장을 위해 마련해둔 뼈대 코드로, 현재 launch 구성(5개 노드)에는 포함되지 않습니다. 향후 주행 중 자세 모니터링 등 확장 기능 개발 시 활용할 예정입니다.
+
 ---
 
 ## 2. 시스템 아키텍처 다이어그램
