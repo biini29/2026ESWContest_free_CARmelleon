@@ -1,0 +1,5 @@
+{
+  "A": {"name": "PAPA", "height": 178, "pregnant": false},
+  "B": {"name": "MAMA", "height": 162, "pregnant": true},
+  "C": {"name": "DAUGHTER", "height": 130, "pregnant": false}
+}
