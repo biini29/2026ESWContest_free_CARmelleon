@@ -1,4 +1,5 @@
 
+
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import rclpy
@@ -12,8 +13,9 @@ NUM_MOTORS_CTRL = 5
 MOTOR_SPEED_OUT = [6.9, 4.4, 6.9, 6.9, 6.8]
 MOTOR_SPEED_IN  = [4.5, 6.9, 6.9, 6.9, 6.8]
 # 코드상 자리 순서(0=150mm ... 4=830mm) → 실제 아두이노 모터 번호(1~5)
-# 150mm자리=M2, 320mm자리=M1 (1,2번 물리 스왑됨)
-MOTOR_MAP = [2, 1, 3, 4, 5]
+# 배선 재정리로 물리 순서가 아래부터 1,2,3,4,5로 정상화됨 → 소프트웨어 스왑 불필요
+# (MOTOR_SPEED_OUT/IN 은 아두이노 채널(M1~M5) 기준값이라 그대로 유지)
+MOTOR_MAP = [1, 2, 3, 4, 5]
 PWM_SPEED = 200
 class SeatControllerNode(Node):
     def __init__(self):
