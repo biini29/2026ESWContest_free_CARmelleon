@@ -1,12 +1,21 @@
+
 # Smart Seat System Wiring Diagram
 
-본 문서는 실제 제작 회로 및 Cirkit Designer 회로도를 기준으로 스마트 시트 시스템의 장치 간 결선 구조를 정리한다.
+본 문서는 실제 제작 회로 및 Cirkit Designer에서 작성한 회로도를 기준으로
+스마트 시트 시스템의 장치 간 결선 구조를 정리한다.
 
-세부 GPIO 및 Arduino 핀 번호는 `03_Pinout_Table.md`, 전원 공급 및 분배 구조는 `02_Power_Distribution_SMPS.md`에서 관리한다.
+세부 GPIO 및 Arduino 핀 번호는 `03_Pinout_Table.md`,
+전원 공급 및 분배 구조는 `02_Power_Distribution_SMPS.md`에서 관리한다.
 
 ---
 
-## 1. 전체 시스템 결선 구조
+## 1. Cirkit Designer 전체 회로도
+<img width="3000" height="1883" alt="circuit_image" src="https://github.com/user-attachments/assets/904d1561-7886-4a37-ba9d-57e14c2b726d" />
+> 전체 시스템의 실제 배선 구성을 Cirkit Designer로 작성한 회로도이다.
+
+---
+
+## 2. 전체 시스템 결선 구조
 
 ```mermaid
 flowchart TB
@@ -67,7 +76,7 @@ flowchart TB
 
 ---
 
-## 2. Raspberry Pi 3 주변 장치 결선
+## 3. Raspberry Pi 3 주변 장치 결선
 
 Raspberry Pi 3는 시스템의 메인 컨트롤러로 사용한다.
 
@@ -97,7 +106,7 @@ I2C LCD와 4×4 Matrix Keypad는 Raspberry Pi GPIO에 연결되며, 실제 회�
 
 ---
 
-## 3. Raspberry Pi 3 ↔ Arduino Mega 2560
+## 4. Raspberry Pi 3 ↔ Arduino Mega 2560
 
 Raspberry Pi 3와 Arduino Mega 2560은 USB 케이블로 연결한다.
 
@@ -115,7 +124,7 @@ Arduino Mega는 리니어 모터 제어 및 초음파 센서 처리를 담당한
 
 ---
 
-## 4. Arduino Mega 2560 ↔ Arduino 확장보드
+## 5. Arduino Mega 2560 ↔ Arduino 확장보드
 
 실제 시스템에서는 Arduino Mega 2560에 확장보드를 사용한다.
 
@@ -146,7 +155,7 @@ Arduino 확장보드
 
 ---
 
-## 5. HC-SR04 결선
+## 6. HC-SR04 결선
 
 HC-SR04 초음파 센서는 Arduino Mega 2560의 확장보드를 통해 연결한다.
 
@@ -171,7 +180,7 @@ HC-SR04에는 다음 신호 및 전원이 연결된다.
 
 ---
 
-## 6. Arduino ↔ L298N 결선
+## 7. Arduino ↔ L298N 결선
 
 Arduino Mega의 모터 제어 신호는 Arduino 확장보드를 거쳐 3개의 L298N Motor Driver로 연결된다.
 
@@ -196,7 +205,7 @@ Arduino Mega의 모터 제어 신호는 Arduino 확장보드를 거쳐 3개의 L
 
 ---
 
-## 7. L298N #1 ↔ Linear Motor 1
+## 8. L298N #1 ↔ Linear Motor 1
 
 L298N #1은 Linear Motor 1을 제어한다.
 
@@ -222,7 +231,7 @@ L298N #1의 A Channel은 사용하지 않는다.
 
 ---
 
-## 8. L298N #2 ↔ Linear Motor 3 / 4
+## 9. L298N #2 ↔ Linear Motor 3 / 4
 
 L298N #2는 Linear Motor 3과 Linear Motor 4를 제어한다.
 
@@ -244,7 +253,7 @@ L298N #2는 Linear Motor 3과 Linear Motor 4를 제어한다.
 
 ---
 
-## 9. L298N #3 ↔ Linear Motor 2 / 5
+## 10. L298N #3 ↔ Linear Motor 2 / 5
 
 L298N #3은 Linear Motor 2와 Linear Motor 5를 제어한다.
 
@@ -266,7 +275,7 @@ L298N #3은 Linear Motor 2와 Linear Motor 5를 제어한다.
 
 ---
 
-## 10. Linear Motor 전체 결선
+## 11. Linear Motor 전체 결선
 
 ```text
 Arduino Mega 2560
@@ -301,7 +310,7 @@ Arduino Mega 2560
 
 ---
 
-## 11. Raspberry Pi 3 ↔ U2D2 결선
+## 12. Raspberry Pi 3 ↔ U2D2 결선
 
 Raspberry Pi 3와 U2D2는 USB로 연결한다.
 
@@ -317,7 +326,7 @@ U2D2는 Raspberry Pi와 DYNAMIXEL 사이의 통신 인터페이스로 사용한�
 
 ---
 
-## 12. U2D2 ↔ U2D2 Power Hub
+## 13. U2D2 ↔ U2D2 Power Hub
 
 U2D2와 U2D2 Power Hub는 3핀 케이블로 연결한다.
 
@@ -335,7 +344,7 @@ U2D2 Power Hub에는 DYNAMIXEL 모터 구동용 별도 외부 전원을 연결�
 
 ---
 
-## 13. U2D2 Power Hub ↔ DYNAMIXEL
+## 14. U2D2 Power Hub ↔ DYNAMIXEL
 
 DYNAMIXEL XL430-W250-T 2개는 각각 U2D2 Power Hub에 3핀 케이블로 연결한다.
 
@@ -360,7 +369,7 @@ DYNAMIXEL XL430-W250-T 2개는 각각 U2D2 Power Hub에 3핀 케이블로 연결
 
 ---
 
-## 14. DYNAMIXEL 전체 결선 구조
+## 15. DYNAMIXEL 전체 결선 구조
 
 ```text
 Raspberry Pi 3
@@ -391,7 +400,7 @@ Raspberry Pi USB와 DYNAMIXEL 구동용 외부 전원은 서로 역할이 다르
 
 ---
 
-## 15. 전체 시스템 결선 요약
+## 16. 전체 시스템 결선 요약
 
 ```text
 Raspberry Pi 3
@@ -435,7 +444,7 @@ Raspberry Pi 3
 
 ---
 
-## 16. 주요 장치 결선 요약표
+## 17. 주요 장치 결선 요약표
 
 | 시작 장치 | 연결 대상 | 연결 방식 |
 |---|---|---|
@@ -460,7 +469,7 @@ Raspberry Pi 3
 
 ---
 
-## 17. 문서 관리 기준
+## 18. 문서 관리 기준
 
 ```text
 electric/
