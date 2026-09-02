@@ -1,16 +1,29 @@
-# 스마트 시트 시스템 결선도
+# Smart Seat System Power Distribution
 
-## 1. 전체 시스템 결선도
+본 문서는 스마트 시트 시스템의 전원 공급 및 분배 구조를 정리한다.
+
+장치 간 물리적 연결은 `01_Wiring_Diagram.md`, GPIO 및 Arduino 제어 핀 정보는 `03_Pinout_Table.md`에서 관리한다.
+
+---
+
+## 1. 전체 전원 계통
+
+스마트 시트 시스템의 전원은 크게 다음 3개의 계통으로 구성한다.
+
+1. Raspberry Pi / 제어 계통
+2. Linear Motor 구동 계통
+3. DYNAMIXEL 구동 계통
 
 ```mermaid
 flowchart TB
 
+    P5["5V 전원"]
     PI["Raspberry Pi 3"]
     ARD["Arduino Mega 2560"]
+    EXT["Arduino 확장보드"]
+    US["HC-SR04"]
 
-    LCD["I2C LCD 16×2"]
-    KEY["4×4 Matrix Keypad"]
-    US["HC-SR04<br/>초음파 센서"]
+    SMPS["12V SMPS"]
 
     L1["L298N #1"]
     L2["L298N #2"]
@@ -22,174 +35,271 @@ flowchart TB
     M4["Linear Motor 4"]
     M5["Linear Motor 5"]
 
-    U2["U2D2"]
+    DXP["DYNAMIXEL용<br/>별도 외부 전원"]
     HUB["U2D2 Power Hub"]
 
-    DX1["DYNAMIXEL<br/>XL430-W250-T #1"]
-    DX2["DYNAMIXEL<br/>XL430-W250-T #2"]
+    DX1["DYNAMIXEL XL430-W250-T #1"]
+    DX2["DYNAMIXEL XL430-W250-T #2"]
 
-    %% Raspberry Pi 주변 장치
-    PI -->|"I2C"| LCD
-    PI -->|"GPIO"| KEY
+    P5 -->|"5V"| PI
 
-    %% Raspberry Pi - Arduino
     PI -->|"USB"| ARD
+    ARD --> EXT
+    EXT -->|"5V / GND"| US
 
-    %% Arduino 주변 장치
-    ARD --> US
+    SMPS -->|"12V + GND"| L1
+    SMPS -->|"12V + GND"| L2
+    SMPS -->|"12V + GND"| L3
 
-    %% Arduino - Motor Driver
-    ARD --> L1
-    ARD --> L2
-    ARD --> L3
+    L1 --> M1
 
-    %% Motor Driver - Linear Motor
-    L1 -->|"OUT3 / OUT4"| M1
+    L2 --> M3
+    L2 --> M4
 
-    L2 -->|"OUT1 / OUT2"| M3
-    L2 -->|"OUT3 / OUT4"| M4
+    L3 --> M5
+    L3 --> M2
 
-    L3 -->|"OUT3 / OUT4"| M2
-    L3 -->|"OUT1 / OUT2"| M5
+    DXP --> HUB
 
-    %% DYNAMIXEL 계통
-    PI -->|"USB"| U2
-    U2 -->|"3핀 케이블"| HUB
+    HUB --> DX1
+    HUB --> DX2
+```
 
-    HUB -->|"3핀 케이블"| DX1
-    HUB -->|"3핀 케이블"| DX2
+> U2D2는 DYNAMIXEL 통신 인터페이스이므로 위 전원 흐름도에서는 구동 전원 계통과 분리하였다. U2D2의 실제 통신 결선은 `01_Wiring_Diagram.md`에서 관리한다.
+
+---
+
+## 2. 전원 계통 구분
+
+```text
+[1] Raspberry Pi / 제어 계통
+
+5V 전원
+   │
+   ▼
+Raspberry Pi 3
+   │
+   └── USB ──→ Arduino Mega 2560
+                    │
+                    ▼
+              Arduino 확장보드
+                    │
+                    └──→ HC-SR04
+
+
+[2] Linear Motor 구동 계통
+
+12V SMPS
+   │
+   ├──→ L298N #1 ──→ Motor 1
+   │
+   ├──→ L298N #2 ──→ Motor 3 / Motor 4
+   │
+   └──→ L298N #3 ──→ Motor 5 / Motor 2
+
+
+[3] DYNAMIXEL 구동 계통
+
+DYNAMIXEL용 별도 외부 전원
+              │
+              ▼
+       U2D2 Power Hub
+          │        │
+          ▼        ▼
+    DYNAMIXEL #1  DYNAMIXEL #2
 ```
 
 ---
 
-## 2. Raspberry Pi 3 주변 장치 연결
+## 3. Raspberry Pi 3 전원 계통
+
+Raspberry Pi 3는 별도의 5V 전원을 사용한다.
+
+본 시스템에서는 12V → 5V DC-DC 컨버터를 사용하지 않는다.
+
+```text
+5V 전원
+   │
+   ▼
+Raspberry Pi 3
+```
 
 Raspberry Pi 3는 시스템의 메인 컨트롤러로 사용한다.
 
+---
+
+## 4. Arduino Mega 2560 전원
+
+Arduino Mega 2560은 Raspberry Pi 3와 USB로 연결한다.
+
 ```text
+5V 전원
+   │
+   ▼
 Raspberry Pi 3
-│
-├── I2C ──→ I2C LCD 16×2
-│
-├── GPIO ─→ 4×4 Matrix Keypad
-│
-├── USB ──→ Arduino Mega 2560
-│
-└── USB ──→ U2D2
-```
-
-### 연결 장치
-
-| Raspberry Pi 3 연결 대상 | 연결 방식 | 역할                     |
-| -------------------- | ----- | ---------------------- |
-| I2C LCD 16×2         | I2C   | 사용자 정보 및 시스템 상태 표시     |
-| 4×4 Matrix Keypad    | GPIO  | 사용자 입력                 |
-| Arduino Mega 2560    | USB   | Serial 통신 및 Arduino 연결 |
-| U2D2                 | USB   | DYNAMIXEL 통신           |
-
-> Raspberry Pi의 상세 GPIO 번호는 `핀맵.md`에서 관리한다.
-
----
-
-## 3. Arduino Mega 2560 주변 장치 연결
-
-Arduino Mega 2560은 초음파 센서와 리니어 모터 구동부를 제어한다.
-
-```text
+   │
+   │ USB
+   ▼
 Arduino Mega 2560
-│
-├──→ HC-SR04
-│
-├──→ L298N #1
-│      └──→ Linear Motor 1
-│
-├──→ L298N #2
-│      ├──→ Linear Motor 3
-│      └──→ Linear Motor 4
-│
-└──→ L298N #3
-       ├──→ Linear Motor 2
-       └──→ Linear Motor 5
 ```
+
+USB 연결은 다음 두 가지 역할을 한다.
+
+- Raspberry Pi ↔ Arduino Serial 통신
+- Arduino 로직 전원 공급
+
+Linear Motor의 구동 전원은 Arduino에서 공급하지 않는다.
 
 ---
 
-## 4. HC-SR04 초음파 센서 연결
+## 5. Arduino 확장보드 및 HC-SR04 전원
 
-HC-SR04 초음파 센서는 Arduino Mega 2560에 직접 연결한다.
+Arduino Mega 2560에 장착된 확장보드를 통해 HC-SR04를 연결한다.
 
 ```text
 Arduino Mega 2560
         │
         ▼
+  Arduino 확장보드
+        │
+        │ 5V / GND
+        ▼
      HC-SR04
 ```
 
-초음파 센서는 좌석 시스템에서 거리 측정용 센서로 사용한다.
+HC-SR04는 Arduino 계통의 5V와 GND를 사용한다.
 
-> TRIG, ECHO 등의 실제 핀 번호는 `핀맵.md`에서 관리한다.
+별도의 12V 구동 전원은 사용하지 않는다.
 
 ---
 
-## 5. L298N ↔ Linear Motor 연결
+## 6. 12V SMPS 전원 분배
 
-### L298N #1
+Linear Motor 5개의 구동 전원은 12V SMPS에서 공급한다.
+
+SMPS의 +12V와 GND를 3개의 L298N Motor Driver에 분배한다.
 
 ```text
+                       12V SMPS
+                          │
+                    +12V / GND
+                          │
+              ┌───────────┼───────────┐
+              │           │           │
+              ▼           ▼           ▼
+          L298N #1    L298N #2    L298N #3
+```
+
+Arduino는 L298N에 제어 신호만 전달하며, 실제 Linear Motor의 구동 전력은 12V SMPS에서 공급한다.
+
+---
+
+## 7. L298N #1 전원 계통
+
+L298N #1은 12V SMPS에서 전원을 공급받아 Linear Motor 1을 구동한다.
+
+```text
+12V SMPS
+   │
+   │ 12V + GND
+   ▼
 L298N #1
-    │
-    └── OUT3 / OUT4 ──→ Linear Motor 1
+   │
+   ▼
+Motor 1
 ```
-
-L298N #1은 Linear Motor 1을 제어한다.
 
 ---
 
-### L298N #2
+## 8. L298N #2 전원 계통
+
+L298N #2는 12V SMPS에서 전원을 공급받아 Linear Motor 3과 Motor 4를 구동한다.
 
 ```text
-L298N #2
-    │
-    ├── OUT1 / OUT2 ──→ Linear Motor 3
-    │
-    └── OUT3 / OUT4 ──→ Linear Motor 4
+             12V SMPS
+                │
+                │ 12V + GND
+                ▼
+            L298N #2
+             │     │
+             ▼     ▼
+         Motor 3  Motor 4
 ```
-
-L298N #2는 Linear Motor 3과 Linear Motor 4를 제어한다.
 
 ---
 
-### L298N #3
+## 9. L298N #3 전원 계통
+
+L298N #3은 12V SMPS에서 전원을 공급받아 Linear Motor 5와 Motor 2를 구동한다.
 
 ```text
-L298N #3
-    │
-    ├── OUT1 / OUT2 ──→ Linear Motor 5
-    │
-    └── OUT3 / OUT4 ──→ Linear Motor 2
+             12V SMPS
+                │
+                │ 12V + GND
+                ▼
+            L298N #3
+             │     │
+             ▼     ▼
+         Motor 5  Motor 2
 ```
 
-L298N #3은 Linear Motor 2와 Linear Motor 5를 제어한다.
+---
+
+## 10. Linear Motor 전체 전원 분배
+
+```text
+                         12V SMPS
+                            │
+                      +12V / GND
+                            │
+                 ┌──────────┼──────────┐
+                 │          │          │
+                 ▼          ▼          ▼
+             L298N #1   L298N #2   L298N #3
+                 │        │   │       │   │
+                 ▼        ▼   ▼       ▼   ▼
+              Motor 1  Motor 3 4   Motor 5 2
+```
+
+### 전원 분배 요약
+
+| 전원 공급원 | Motor Driver | 연결 Motor |
+|---|---|---|
+| 12V SMPS | L298N #1 | Motor 1 |
+| 12V SMPS | L298N #2 | Motor 3, Motor 4 |
+| 12V SMPS | L298N #3 | Motor 5, Motor 2 |
 
 ---
 
-## 6. 모터 드라이버 연결 요약
+## 11. Linear Motor 제어 전원과 구동 전원 구분
 
-| Motor Driver | 연결 모터          | 사용 출력       |
-| ------------ | -------------- | ----------- |
-| L298N #1     | Linear Motor 1 | OUT3 / OUT4 |
-| L298N #2     | Linear Motor 3 | OUT1 / OUT2 |
-| L298N #2     | Linear Motor 4 | OUT3 / OUT4 |
-| L298N #3     | Linear Motor 5 | OUT1 / OUT2 |
-| L298N #3     | Linear Motor 2 | OUT3 / OUT4 |
+Linear Motor 계통에서는 Arduino의 제어 신호와 SMPS의 구동 전원을 구분한다.
 
-> ENA, ENB, IN1~IN4 및 Arduino 핀 번호는 `핀맵.md`에서 관리한다.
+```text
+Arduino Mega 2560
+        │
+        │ 제어 신호
+        ▼
+      L298N
+        ▲
+        │
+        │ 12V 구동 전원
+        │
+     12V SMPS
+        │
+        ▼
+  Linear Motor
+```
+
+Arduino Mega는 모터를 직접 구동하지 않는다.
+
+Arduino는 L298N에 PWM 및 방향 제어 신호를 전달하고, 실제 모터 구동에 필요한 전력은 12V SMPS에서 공급한다.
 
 ---
 
-## 7. U2D2 / DYNAMIXEL 연결
+## 12. U2D2 계통
 
-DYNAMIXEL 계통은 Raspberry Pi 3에서 U2D2를 통해 연결한다.
+Raspberry Pi 3와 U2D2는 USB로 연결한다.
 
 ```text
 Raspberry Pi 3
@@ -197,50 +307,38 @@ Raspberry Pi 3
       │ USB
       ▼
     U2D2
-      │
-      │ 3핀 케이블
-      ▼
-U2D2 Power Hub
-      │
-      ├── 3핀 케이블 ──→ DYNAMIXEL XL430-W250-T #1
-      │
-      └── 3핀 케이블 ──→ DYNAMIXEL XL430-W250-T #2
 ```
 
-### 연결 요약
+U2D2는 Raspberry Pi와 DYNAMIXEL 사이의 통신 인터페이스 역할을 한다.
 
-| 시작 장치          | 연결 대상                     | 연결 방식  |
-| -------------- | ------------------------- | ------ |
-| Raspberry Pi 3 | U2D2                      | USB    |
-| U2D2           | U2D2 Power Hub            | 3핀 케이블 |
-| U2D2 Power Hub | DYNAMIXEL XL430-W250-T #1 | 3핀 케이블 |
-| U2D2 Power Hub | DYNAMIXEL XL430-W250-T #2 | 3핀 케이블 |
+DYNAMIXEL의 모터 구동 전원은 Raspberry Pi USB에서 공급하지 않는다.
 
 ---
 
-## 8. 전체 장치 연결 구조
+## 13. U2D2 Power Hub 외부 전원
+
+U2D2 Power Hub에는 DYNAMIXEL 구동을 위한 별도의 외부 전원 장치를 연결한다.
 
 ```text
-                         Raspberry Pi 3
-                               │
-          ┌────────────────────┼────────────────────┐
-          │                    │                    │
-          ▼                    ▼                    ▼
-      I2C LCD              4×4 Keypad         Arduino Mega
-                                                  │
-                                     ┌────────────┼────────────┐
-                                     │            │            │
-                                     ▼            ▼            ▼
-                                  HC-SR04     L298N #1      L298N #2
-                                                  │          │     │
-                                                  ▼          ▼     ▼
-                                               Motor 1    Motor 3 Motor 4
+DYNAMIXEL용 별도 외부 전원
+              │
+              ▼
+       U2D2 Power Hub
+          │        │
+          ▼        ▼
+    DYNAMIXEL #1  DYNAMIXEL #2
+```
 
-                                               L298N #3
-                                                │     │
-                                                ▼     ▼
-                                             Motor 5 Motor 2
+U2D2 Power Hub는 별도 외부 전원을 DYNAMIXEL 계통에 분배한다.
 
+---
+
+## 14. DYNAMIXEL 통신과 전원 구분
+
+DYNAMIXEL 계통에서는 통신 경로와 구동 전원 경로를 구분한다.
+
+```text
+[통신 경로]
 
 Raspberry Pi 3
       │
@@ -248,51 +346,178 @@ Raspberry Pi 3
       ▼
     U2D2
       │
-      │ 3핀 케이블
+      │ 3핀
       ▼
 U2D2 Power Hub
       │
       ├──→ DYNAMIXEL #1
+      └──→ DYNAMIXEL #2
+
+
+[구동 전원 경로]
+
+별도 외부 전원
       │
+      ▼
+U2D2 Power Hub
+      │
+      ├──→ DYNAMIXEL #1
+      └──→ DYNAMIXEL #2
+```
+
+즉,
+
+- Raspberry Pi → U2D2 : 통신 인터페이스
+- U2D2 → Power Hub : DYNAMIXEL 통신
+- 외부 전원 → Power Hub : DYNAMIXEL 구동 전원
+- Power Hub → DYNAMIXEL : 통신 및 구동 전원 전달
+
+---
+
+## 15. 전체 전원 흐름
+
+```text
+================================================
+          Raspberry Pi / Control Power
+================================================
+
+5V 전원
+   │
+   ▼
+Raspberry Pi 3
+   │
+   └── USB ──→ Arduino Mega 2560
+                    │
+                    └──→ HC-SR04
+
+
+================================================
+             Linear Motor Power
+================================================
+
+12V SMPS
+   │
+   ├──→ L298N #1
+   │        └──→ Motor 1
+   │
+   ├──→ L298N #2
+   │        ├──→ Motor 3
+   │        └──→ Motor 4
+   │
+   └──→ L298N #3
+            ├──→ Motor 5
+            └──→ Motor 2
+
+
+================================================
+              DYNAMIXEL Power
+================================================
+
+별도 외부 전원
+      │
+      ▼
+U2D2 Power Hub
+      │
+      ├──→ DYNAMIXEL #1
       └──→ DYNAMIXEL #2
 ```
 
 ---
 
-## 9. 문서 구분
+## 16. 전체 전원 계통 요약표
 
-본 프로젝트의 전기 관련 문서는 다음과 같이 구분한다.
+| 장치 | 전원 공급원 | 공급 방식 | 용도 |
+|---|---|---|---|
+| Raspberry Pi 3 | 별도 5V 전원 | 직접 공급 | 메인 컨트롤러 |
+| Arduino Mega 2560 | Raspberry Pi 3 | USB | Arduino 로직 전원 |
+| Arduino 확장보드 | Arduino Mega | 보드 연결 | 배선 확장 |
+| HC-SR04 | Arduino 계통 | 5V / GND | 센서 전원 |
+| L298N #1 | 12V SMPS | 12V + GND | Motor 1 구동 |
+| L298N #2 | 12V SMPS | 12V + GND | Motor 3 / 4 구동 |
+| L298N #3 | 12V SMPS | 12V + GND | Motor 5 / 2 구동 |
+| Motor 1 | L298N #1 | Motor Output | 구동 전원 |
+| Motor 2 | L298N #3 | Motor Output | 구동 전원 |
+| Motor 3 | L298N #2 | Motor Output | 구동 전원 |
+| Motor 4 | L298N #2 | Motor Output | 구동 전원 |
+| Motor 5 | L298N #3 | Motor Output | 구동 전원 |
+| U2D2 | Raspberry Pi 3 | USB | 통신 인터페이스 |
+| U2D2 Power Hub | 별도 외부 전원 | 외부 전원 입력 | DYNAMIXEL 전원 분배 |
+| DYNAMIXEL #1 | U2D2 Power Hub | 3핀 | 통신 / 구동 전원 |
+| DYNAMIXEL #2 | U2D2 Power Hub | 3핀 | 통신 / 구동 전원 |
+
+---
+
+## 17. 전원 계통 핵심 구조
+
+```mermaid
+flowchart LR
+
+    P5["5V 전원"] --> PI["Raspberry Pi 3"]
+    PI -->|"USB"| ARD["Arduino Mega 2560"]
+
+    SMPS["12V SMPS"] --> L1["L298N #1"]
+    SMPS --> L2["L298N #2"]
+    SMPS --> L3["L298N #3"]
+
+    L1 --> M1["Motor 1"]
+
+    L2 --> M3["Motor 3"]
+    L2 --> M4["Motor 4"]
+
+    L3 --> M5["Motor 5"]
+    L3 --> M2["Motor 2"]
+
+    DXP["DYNAMIXEL용<br/>별도 외부 전원"] --> HUB["U2D2 Power Hub"]
+
+    HUB --> DX1["DYNAMIXEL #1"]
+    HUB --> DX2["DYNAMIXEL #2"]
+```
+
+---
+
+## 18. 문서 관리 기준
 
 ```text
 electric/
-├── 핀맵.md
-├── 결선도.md
-└── 전원 계통도.md
+├── 01_Wiring_Diagram.md
+├── 02_Power_Distribution_SMPS.md
+└── 03_Pinout_Table.md
 ```
 
-* `핀맵.md`
+### `01_Wiring_Diagram.md`
 
-  * Raspberry Pi GPIO 번호
-  * Arduino Digital Pin 번호
-  * ENA / ENB
-  * IN1 ~ IN4
-  * HC-SR04 TRIG / ECHO
-  * LCD SDA / SCL
+장치 간 실제 물리적 연결 관계를 관리한다.
 
-* `결선도.md`
+- Breadboard
+- Arduino 확장보드
+- Raspberry Pi ↔ Arduino
+- Arduino ↔ HC-SR04
+- Arduino ↔ L298N
+- L298N ↔ Linear Motor
+- Raspberry Pi ↔ U2D2
+- U2D2 ↔ Power Hub ↔ DYNAMIXEL
 
-  * 장치 간 연결 관계
-  * Raspberry Pi ↔ Arduino
-  * Arduino ↔ L298N
-  * L298N ↔ Linear Motor
-  * Raspberry Pi ↔ U2D2 ↔ DYNAMIXEL
-  * 센서 및 주변 장치 연결 구조
+### `02_Power_Distribution_SMPS.md`
 
-* `전원 계통도.md`
+전원 공급원과 전원 분배 경로를 관리한다.
 
-  * Raspberry Pi 전원
-  * Arduino 전원
-  * 12V SMPS
-  * L298N 전원
-  * Linear Motor 전원
-  * DYNAMIXEL 전원 계통
+- Raspberry Pi 5V 전원
+- Arduino USB 전원
+- HC-SR04 전원
+- 12V SMPS
+- L298N / Linear Motor 구동 전원
+- U2D2 Power Hub 별도 외부 전원
+- DYNAMIXEL 구동 전원
+
+### `03_Pinout_Table.md`
+
+실제 제어 핀 번호를 관리한다.
+
+- Raspberry Pi GPIO
+- LCD SDA / SCL
+- Keypad ROW / COL
+- Arduino Digital Pin
+- HC-SR04 TRIG / ECHO
+- L298N ENA / ENB
+- L298N IN1 ~ IN4
+- Motor별 제어 핀
