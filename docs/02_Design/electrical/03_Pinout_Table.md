@@ -1,8 +1,12 @@
-# 스마트 시트 시스템 핀맵
+# Smart Seat System Pinout Table
+
+본 문서는 실제 제작 회로 및 Cirkit Designer 회로도를 기준으로 스마트 시트 시스템의 핀 연결 정보를 정리한다.
+
+세부 장치 연결 구조는 `01_Wiring_Diagram.md`, 전원 공급 구조는 `02_Power_Distribution_SMPS.md`에서 관리한다.
+
+---
 
 ## 1. 시스템 구성
-
-본 핀맵은 실제 제작 회로와 Cirkit Designer 회로도를 기준으로 작성한다.
 
 | 장치 | 수량 | 역할 |
 |---|---:|---|
@@ -17,16 +21,16 @@
 | Linear Motor | 5 | 등받이 형상 조절 |
 | U2D2 | 1 | Raspberry Pi ↔ DYNAMIXEL 통신 |
 | U2D2 Power Hub | 1 | DYNAMIXEL 통신 및 전원 분배 |
-| DYNAMIXEL XL430-W250-T | 2 | 벨트/시트 구동 |
-| 12V SMPS | 1 | 리니어 모터 계통 전원 |
+| DYNAMIXEL XL430-W250-T | 2 | 벨트 구동 |
+| 12V SMPS | 1 | Linear Motor 계통 전원 |
 
 ---
 
-# 2. Raspberry Pi 3 핀맵
+# 2. Raspberry Pi 3 Pinout
 
 ## 2-1. I2C LCD 16×2
 
-| LCD 핀 | Raspberry Pi 3 | 물리 핀 | 역할 |
+| LCD Pin | Raspberry Pi 3 | Physical Pin | Role |
 |---|---|---:|---|
 | VCC | 5V | Pin 2 | LCD 전원 |
 | GND | GND | Pin 6 | Ground |
@@ -43,7 +47,7 @@ LCD I2C Address : 0x27
 
 ## 2-2. 4×4 Matrix Keypad
 
-| Keypad 핀 | Raspberry Pi GPIO | 물리 핀 |
+| Keypad Pin | Raspberry Pi GPIO | Physical Pin |
 |---|---:|---:|
 | COL1 | GPIO 5 | Pin 29 |
 | COL2 | GPIO 6 | Pin 31 |
@@ -54,7 +58,7 @@ LCD I2C Address : 0x27
 | ROW3 | GPIO 16 | Pin 36 |
 | ROW4 | GPIO 20 | Pin 38 |
 
-### Keypad GPIO 정리
+### Keypad GPIO 요약
 
 ```text
 COL1 → GPIO 5
@@ -87,15 +91,15 @@ Raspberry Pi 3
 Arduino Mega 2560
 ```
 
-Arduino의 센서 및 모터 제어 핀은 Arduino Mega의 논리 핀 번호를 기준으로 관리한다.
+Arduino Mega에는 확장보드를 사용하며, 외부 장치는 확장보드를 통해 연결한다.
 
-Arduino 확장보드를 사용하는 경우에도 프로그램에서는 동일한 Arduino 핀 번호를 사용한다.
+프로그램에서 사용하는 핀 번호는 Arduino Mega의 Digital Pin 번호를 기준으로 한다.
 
 ---
 
-# 4. HC-SR04 초음파 센서 핀맵
+# 4. HC-SR04 Pinout
 
-HC-SR04는 Arduino Mega 2560에 연결한다.
+HC-SR04 초음파 센서는 Arduino Mega 2560에 연결한다.
 
 | HC-SR04 | Arduino Mega | 역할 |
 |---|---:|---|
@@ -115,11 +119,9 @@ Arduino Mega
 
 ---
 
-# 5. Linear Motor PWM 핀맵
+# 5. Linear Motor PWM Pinout
 
-리니어 모터 5개는 L298N 3개를 이용해 제어한다.
-
-| Arduino Mega | L298N | 채널 | Motor | 역할 |
+| Arduino Mega | L298N | Channel | Motor | Role |
 |---:|---|---|---|---|
 | D2 | L298N #3 | ENB | Motor 2 | PWM |
 | D3 | L298N #1 | ENB | Motor 1 | PWM |
@@ -139,13 +141,13 @@ D6 → L298N #3 ENA → Motor 5
 
 ---
 
-# 6. Linear Motor 방향 제어 핀맵
+# 6. Linear Motor Direction Control Pinout
 
 ## 6-1. L298N #1
 
-L298N #1은 Motor 1만 사용한다.
+L298N #1은 Motor 1을 제어한다.
 
-Motor 1은 B Channel의 OUT3 / OUT4를 사용한다.
+Motor 1은 B Channel을 사용한다.
 
 | Arduino Mega | L298N #1 | Motor |
 |---:|---|---|
@@ -153,14 +155,10 @@ Motor 1은 B Channel의 OUT3 / OUT4를 사용한다.
 | D23 | IN4 | Motor 1 |
 | D3 | ENB | Motor 1 PWM |
 
-### 출력
-
 ```text
-L298N #1
-
-D22 → IN3
-D23 → IN4
-D3  → ENB
+Arduino D22 → IN3
+Arduino D23 → IN4
+Arduino D3  → ENB
 
 OUT3 / OUT4
       │
@@ -168,7 +166,7 @@ OUT3 / OUT4
 Linear Motor 1
 ```
 
-L298N #1의 A Channel(ENA / IN1 / IN2 / OUT1 / OUT2)은 사용하지 않는다.
+L298N #1의 A Channel은 사용하지 않는다.
 
 ---
 
@@ -185,9 +183,9 @@ L298N #2는 Motor 3과 Motor 4를 제어한다.
 | D4 | ENA | Motor 3 PWM |
 
 ```text
-D24 → IN1
-D25 → IN2
-D4  → ENA
+Arduino D24 → IN1
+Arduino D25 → IN2
+Arduino D4  → ENA
 
 OUT1 / OUT2
       │
@@ -204,9 +202,9 @@ Linear Motor 3
 | D5 | ENB | Motor 4 PWM |
 
 ```text
-D26 → IN3
-D27 → IN4
-D5  → ENB
+Arduino D26 → IN3
+Arduino D27 → IN4
+Arduino D5  → ENB
 
 OUT3 / OUT4
       │
@@ -229,9 +227,9 @@ L298N #3은 Motor 5와 Motor 2를 제어한다.
 | D6 | ENA | Motor 5 PWM |
 
 ```text
-D28 → IN1
-D29 → IN2
-D6  → ENA
+Arduino D28 → IN1
+Arduino D29 → IN2
+Arduino D6  → ENA
 
 OUT1 / OUT2
       │
@@ -248,9 +246,9 @@ Linear Motor 5
 | D2 | ENB | Motor 2 PWM |
 
 ```text
-D30 → IN3
-D31 → IN4
-D2  → ENB
+Arduino D30 → IN3
+Arduino D31 → IN4
+Arduino D2  → ENB
 
 OUT3 / OUT4
       │
@@ -284,9 +282,9 @@ Linear Motor 2
 
 ---
 
-# 8. 모터별 최종 핀맵
+# 8. Motor별 최종 Pinout
 
-| Motor | Driver | Channel | PWM | 방향 제어 | 출력 |
+| Motor | Driver | Channel | PWM | Direction | Output |
 |---|---|---|---:|---|---|
 | Motor 1 | L298N #1 | B | D3 | D22 / D23 | OUT3 / OUT4 |
 | Motor 2 | L298N #3 | B | D2 | D30 / D31 | OUT3 / OUT4 |
@@ -296,7 +294,7 @@ Linear Motor 2
 
 ---
 
-# 9. L298N별 최종 핀맵
+# 9. L298N별 최종 Pinout
 
 ## L298N #1
 
@@ -387,13 +385,13 @@ U2D2 Power Hub
 
 U2D2 Power Hub에는 DYNAMIXEL 구동을 위한 별도 외부 전원을 사용한다.
 
-> 외부 전원의 세부 전압 및 전원 공급 경로는 `전원 계통도.md`에서 관리한다.
+> 외부 전원의 상세 공급 구조는 `02_Power_Distribution_SMPS.md`에서 관리한다.
 
 ---
 
 # 11. Raspberry Pi 전체 GPIO 사용 현황
 
-| BCM GPIO | 물리 핀 | 연결 대상 | 역할 |
+| BCM GPIO | Physical Pin | 연결 대상 | 역할 |
 |---:|---:|---|---|
 | GPIO 2 | 3 | I2C LCD SDA | I2C Data |
 | GPIO 3 | 5 | I2C LCD SCL | I2C Clock |
@@ -408,7 +406,7 @@ U2D2 Power Hub에는 DYNAMIXEL 구동을 위한 별도 외부 전원을 사용�
 
 ---
 
-# 12. 핀맵 요약
+# 12. 전체 Pinout 요약
 
 ```text
 Raspberry Pi 3
@@ -452,33 +450,46 @@ Arduino Mega 2560
 
 # 13. 문서 관리 기준
 
-본 문서에서는 실제 GPIO 및 제어 핀 번호만 관리한다.
-
 ```text
 electric/
-├── 핀맵.md
-├── 결선도.md
-└── 전원 계통도.md
+├── 01_Wiring_Diagram.md
+├── 02_Power_Distribution_SMPS.md
+└── 03_Pinout_Table.md
 ```
 
-- `핀맵.md`
-  - Raspberry Pi GPIO
-  - Arduino Digital Pin
-  - HC-SR04 TRIG / ECHO
-  - L298N ENA / ENB
-  - L298N IN1 ~ IN4
-  - 모터별 제어 핀
+## `01_Wiring_Diagram.md`
 
-- `결선도.md`
-  - Breadboard 및 확장보드 포함 실제 장치 연결 구조
-  - Raspberry Pi ↔ 주변 장치
-  - Arduino ↔ L298N ↔ Linear Motor
-  - U2D2 ↔ Power Hub ↔ DYNAMIXEL
+장치 간 실제 물리적 연결 구조를 관리한다.
 
-- `전원 계통도.md`
-  - Raspberry Pi 전원
-  - Arduino 전원
-  - 12V SMPS
-  - L298N 및 Linear Motor 전원
-  - U2D2 Power Hub 외부 전원
-  - DYNAMIXEL 구동 전원
+- Breadboard
+- Arduino 확장보드
+- Raspberry Pi ↔ Arduino
+- Arduino ↔ HC-SR04
+- Arduino ↔ L298N
+- L298N ↔ Linear Motor
+- Raspberry Pi ↔ U2D2
+- U2D2 ↔ Power Hub ↔ DYNAMIXEL
+
+## `02_Power_Distribution_SMPS.md`
+
+전원의 공급 및 분배 구조를 관리한다.
+
+- Raspberry Pi 전원
+- Arduino 전원
+- 12V SMPS
+- L298N / Linear Motor 전원
+- U2D2 Power Hub 외부 전원
+- DYNAMIXEL 구동 전원
+
+## `03_Pinout_Table.md`
+
+실제 제어 핀 번호를 관리한다.
+
+- Raspberry Pi GPIO
+- LCD SDA / SCL
+- Keypad ROW / COL
+- Arduino Digital Pin
+- HC-SR04 TRIG / ECHO
+- L298N ENA / ENB
+- L298N IN1 ~ IN4
+- Motor별 제어 핀
