@@ -1,10 +1,7 @@
-
-
 #!/usr/bin/env python3
 import rclpy
 from rclpy.node import Node
 from geometry_msgs.msg import Point
-from std_msgs.msg import String, Float32
 import RPi.GPIO as GPIO
 import time
 import threading
@@ -57,15 +54,12 @@ class SmartSeatController(Node):
         self.d_long_fired = False
         self.LONGPRESS_SEC = 3.0
 
-        # 초음파 센서 (HC-SR04) — 아두이노 경유로 이설
-        #   HC-SR04 ECHO(5V)를 3.3V인 라즈베리파이 GPIO에 직결하면 위험하므로,
-        #   5V 로직인 아두이노가 직접 측정하고 그 값을 시리얼→arduino_bridge_node
-        #   →/ultrasonic_distance 토픽으로 받는다. (레벨시프트 회로 불필요)
-        self.measure_req_pub = self.create_publisher(String, '/measure_request', 10)
-        self.create_subscription(Float32, '/ultrasonic_distance',
-                                 self._on_ultrasonic, 10)
-        self._latest_distance_mm = None
-        self._distance_event = threading.Event()
+        # 초음파 센서 (HC-SR04)
+        self.TRIG_PIN = 23
+        self.ECHO_PIN = 24
+        GPIO.setup(self.TRIG_PIN, GPIO.OUT)
+        GPIO.setup(self.ECHO_PIN, GPIO.IN)
+        GPIO.output(self.TRIG_PIN, GPIO.LOW)
 
         self.SENSOR_HEIGHT_ABOVE_CUSHION_MM = 570.0
         self.SIT_A, self.SIT_B, self.SIT_C = 4.2999, 0.2129, 171.2187
@@ -274,24 +268,29 @@ class SmartSeatController(Node):
             time.sleep(2.5)
             self.update_lcd("Guest Mode", "Enter H: _")
 
-    def _on_ultrasonic(self, msg):
-        # arduino_bridge_node가 아두이노 "DIST,x" 응답을 받아 발행한 거리(mm)
-        self._latest_distance_mm = msg.data
-        self._distance_event.set()
-
     def _read_ultrasonic_distance_mm(self):
-        # 아두이노에 거리 측정을 요청하고(/measure_request "U"),
-        # /ultrasonic_distance 응답을 최대 1초 대기해서 받는다.
-        self._distance_event.clear()
-        self._latest_distance_mm = None
-        self.measure_req_pub.publish(String(data='U'))
+        GPIO.output(self.TRIG_PIN, GPIO.HIGH)
+        time.sleep(0.00001)
+        GPIO.output(self.TRIG_PIN, GPIO.LOW)
 
-        if not self._distance_event.wait(timeout=1.0):
-            return None                      # 응답 타임아웃
-        d = self._latest_distance_mm
-        if d is None or d < 0:
-            return None                      # 아두이노 측정 실패(DIST,-1)
-        return float(d)
+        pulse_start = time.time()
+        pulse_end = time.time()
+
+        timeout_start = time.time()
+        while GPIO.input(self.ECHO_PIN) == 0:
+            pulse_start = time.time()
+            if pulse_start - timeout_start > 0.05:
+                return None
+
+        timeout_start = time.time()
+        while GPIO.input(self.ECHO_PIN) == 1:
+            pulse_end = time.time()
+            if pulse_end - timeout_start > 0.05:
+                return None
+
+        duration = pulse_end - pulse_start
+        distance_cm = (duration * 34300) / 2.0
+        return distance_cm * 10.0
 
     def update_lcd(self, line1, line2):
         if self.lcd:
