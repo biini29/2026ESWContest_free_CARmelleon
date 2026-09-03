@@ -32,8 +32,8 @@ const int MOTOR_IN[NUM_MOTORS][2] = {
 
 // ── HC-SR04 초음파 센서 (아두이노 5V 로직에서 직접 읽음) ──
 // 리니어용 D2~D6, D22~D31 과 겹치지 않는 여유 핀 사용. 배선에 맞게 변경 가능.
-const int TRIG_PIN = 32;
-const int ECHO_PIN = 33;
+const int TRIG_PIN = 7;
+const int ECHO_PIN = 8;
 const unsigned long ECHO_TIMEOUT_US = 30000UL;  // 약 5m 왕복 타임아웃
 
 void setup() {
